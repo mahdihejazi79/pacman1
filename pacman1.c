@@ -43,7 +43,7 @@ int printmap(char map[4][4],int *s,int *t)
 			}
 
 			if(map[i][j]=='#')
-			printf("%c",254);
+			printf("%c",254);	
 		}
 	
 		printf("%c",254);
@@ -61,9 +61,9 @@ int printmap(char map[4][4],int *s,int *t)
 
 int main()
 {
-	char map[4][4],c;
 	int i=0,j=0,s,t,score;
-	
+	char map[4][4];
+	int check[1000]={0};
 	FILE *p;
 	p=fopen("Testcase01.txt","r");
 	
@@ -73,28 +73,52 @@ int main()
 	fclose(p);
 	
 	score=printmap(map,&s,&t);
-	
+	check[0]=1;
 	while(score!=0)
 	{
-		if(t<3 && s%2==0)
-		{
-			map[s][t]='1';
-			map[s][t+1]='0';
+	    if(map[s+1][t]=='*' && s<3)
+	    {
+	    	map[s][t]='1';
+	    	map[s+1][t]='0';
 		}
-		if(t==3 && s%2==0)
-		{
-			map[s][t]='1';
-			map[s+1][t]='0';
+		else if(map[s][t+1]=='*' && t<3)
+	    {
+	    	map[s][t]='1';
+	    	map[s][t+1]='0';
 		}
-		if(t>0 && s%2==1)
-		{
-			map[s][t]='1';
-			map[s][t-1]='0';
+		else if(map[s-1][t]=='*' && s>0)
+	    {
+	    	map[s][t]='1';
+	    	map[s-1][t]='0';
 		}
-		if(t==0 && s%2==1)
-		{
-			map[s][t]='1';
-			map[s+1][t]='0';
+		else if(map[s][t-1]=='*' && t>0)
+	    {
+	    	map[s][t]='1';
+	    	map[s][t-1]='0';
+		}
+		else if(map[s+1][t]!='#' && !check[(s+1)*4 + t] && s<3)
+	    {
+	    	map[s][t]='1';
+	    	map[s+1][t]='0';
+	    	check[(s+1)*4 + t]=1;
+		}
+		else if(map[s][t+1]!='#' && !check[s*4 + t+1] && t<3)
+	    {
+	    	map[s][t]='1';
+	    	map[s][t+1]='0';
+	    	check[s*4 + t+1]=1;
+		}
+		else if(map[s-1][t]!='#' && !check[(s-1)*4 + t] && s>0)
+	    {
+	    	map[s][t]='1';
+	    	map[s-1][t]='0';
+	    	check[(s-1)*4 + t]=1;
+		}
+		else if(map[s][t-1]!='#' && !check[s*4 + t-1] && t>0)
+	    {
+	    	map[s][t]='1';
+	    	map[s][t-1]='0';
+	    	check[s*4 + t-1]=1;
 		}
 		sleep(1);
 		score=printmap(map,&s,&t);
